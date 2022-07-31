@@ -20,10 +20,10 @@ return new class extends Migration
             $table->string('contact')->nullable();
             $table->datetime('startDateTime')->nullable();
             $table->datetime('endDateTime')->nullable();
-            $table->string('locations')->nullable();
             $table->string('teams')->nullable();
             $table->foreignId('user_id')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
