@@ -15,8 +15,9 @@ return new class extends Migration
     {
         Schema::create('records', function (Blueprint $table) {
             $table->id();
-            $table->integer('team_id');
-            $table->integer('loc_id');
+            $table->foreignId('team_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('location_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('event_id')->constrained()->cascadeOnDelete();;
             $table->integer('points')->nullable(); // Not in use right now... may end up using it though!
             $table->timestamps();
         });

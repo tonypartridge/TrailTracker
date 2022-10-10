@@ -5,14 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EventsLocations extends Model
+class TeamsParticipants extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'sort',
-        'event_id',
-        'location_id',
-        'points',
+        'team_id',
+        'participant_id'
     ];
 }

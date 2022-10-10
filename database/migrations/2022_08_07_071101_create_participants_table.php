@@ -13,14 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('teams', function (Blueprint $table) {
+        Schema::create('participants', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('description')->nullable();
-            $table->string('members')->nullable();
-            $table->foreignId('event_id')->constrained()->cascadeOnDelete();
+            $table->string('dob')->nullable();
+            $table->string('address')->nullable();
+            $table->string('emergency_name')->nullable();
+            $table->string('emergency_phone')->nullable();
+            $table->string('emergency_relation')->nullable();
+            $table->integer('user_id')->nullable();
             $table->timestamps();
-            $table->index('id', 'team_id');
+            $table->index('id', 'participant_id');
         });
     }
 
@@ -31,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('teams');
+        Schema::dropIfExists('participants');
     }
 };

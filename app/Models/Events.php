@@ -25,17 +25,8 @@ class Events extends Model
         'user_id',
     ];
 
-//    protected static function boot() {
-//        parent::boot();
-//
-//        static::creating(function ($model) {
-//            $model->user_id = is_object(Auth::guard(config('app.guards.web'))->user()) ? Auth::guard(config('app.guards.web'))->user()->id : 1;
-//        });
-//
-//    }
     public function locations(): HasMany
     {
-        return $this->hasMany(EventsLocations::class, 'events_id');
-        return $this->belongsToMany(EventsLocations::class, 'locations', 'id', 'locations_id', '', '');
+        return $this->hasMany(EventsLocations::class, 'event_id');
     }
 }

@@ -34,7 +34,14 @@
                     @endauth
                 </div>
             @endif
-                @livewire('locations-map')
+                <div class="w-full h-full min-h-screen" wire:poll.1500ms>
+                    <div class="bg-gray-800 overflow-hidden shadow">
+                        <div class="flex min-h-screen">
+                            @livewire('events.selection')
+                            @livewire('locations-map')
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -42,5 +49,13 @@
         <style>
             [x-cloak] { display: none !important; }
         </style>
+        <script>
+            window.livewire.onError(statusCode => {
+                if (statusCode === 419) {
+                    console.log(statusCode)
+                    window.location.href = "/"
+                }
+            })
+        </script>
     </body>
 </html>

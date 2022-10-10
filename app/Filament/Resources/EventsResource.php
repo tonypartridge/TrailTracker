@@ -39,7 +39,7 @@ class EventsResource extends Resource
                         Forms\Components\Repeater::make('locations')
                             ->relationship()
                             ->schema([
-                                Forms\Components\Select::make('locations_id')
+                                Forms\Components\Select::make('location_id')
                                     ->label('Location')
                                     ->options(Locations::query()->pluck('name', 'id'))
                                     ->required()

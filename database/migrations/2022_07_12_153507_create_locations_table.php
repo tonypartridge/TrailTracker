@@ -18,12 +18,13 @@ return new class extends Migration
             $table->string('name');
             $table->string('description')->nullable();
             $table->string('address')->nullable();
-            $table->decimal('lat', '18', '15');
-            $table->decimal('lon', '18', '15');
+            $table->decimal('lat', '11', '8');
+            $table->decimal('lon', '11', '8');
             $table->string('image_path')->nullable();
             $table->string('url')->nullable();
             $table->integer('created_by')->nullable();
             $table->timestamps();
+            $table->index('id', 'location_id');
         });
     }
 

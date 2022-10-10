@@ -13,12 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('events_locations', function (Blueprint $table) {
+        Schema::create('teams_participants', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('sort')->default(0);
-            $table->foreignId('event_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('location_id')->constrained()->cascadeOnDelete();
-            $table->integer('points');
+            $table->foreignId('team_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('participant_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('events_locations');
+        Schema::dropIfExists('teams_participants');
     }
 };
