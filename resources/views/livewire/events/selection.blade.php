@@ -18,25 +18,19 @@
             <h2 class="text-white my-4 text-lg font-bold">Current Rankings</h2>
             @php $c = 1 @endphp
             @foreach($teams as $i => $team)
-                {{ $c }}. {{ $team->name }} <br>
+                @if(is_countable($team->records))
+                <div class="flex border-b-2 border-gray-400" data-name="{{ $team->name }}" data-lat="{{ $team->records[0]->lat }}"
+                     data-lon="{{ $team->records[0]->lat }}" data-datetime="{{ $team->records[0]->created_at }}">
+
+                    <div class="px-2 py-2">{{ $c }}</div>
+                    <div class="flex-auto text-center border-l-2 border-r-2 border-gray-400 px-2 py-2 font-bold">{{ $team->name }}</div>
+                    <div class="px-2 py-2">{{ $team->points }}</div>
+
+                </div>
+                @endif
+
                 @php ++$c @endphp
             @endforeach
         @endif
-</div>
-<script>
-    <!-- Build out the markers -->
-
-
-{{--                            @foreach($riders as $rider)--}}
-
-{{--var marker{{ $vessel->id }} = L.marker([{{ $vessel->cLoc->latitude }}, {{ $vessel->cLoc->longitude }}]).addTo(map);--}}
-{{--marker{{ $vessel->id }}.bindPopup("<p><b>Vessel: {{ $vessel->name }}</b><hr><br>Current Location: {{ $vessel->cLoc->current_area }}<br>Latitude: {{ $vessel->cLoc->latitude }}<br>Longitude: {{ $vessel->cLoc->longitude }}<br>Course: {{ $vessel->cLoc->course }}<br>Speed: {{ $vessel->cLoc->speed }}<br>Destination: {{ $vessel->cLoc->destination }}<br>ETA: {{ date('d-m-Y H:i', $vessel->cLoc->eta) }}<br>Next Port: {{ $vessel->cLoc->next_port }}<br>Current Port: {{ $vessel->cLoc->current_port }}</p><p class='text-center'><small>Updated: {{ date('H:i d-m-Y', $vessel->cLoc->unixtime) }}</small></p>");--}}
-
-{{--                            @endforeach--}}
-document.addEventListener('DOMContentLoaded', function () {
-
-});
-
-</script>
-
+    </div>
 </div>
