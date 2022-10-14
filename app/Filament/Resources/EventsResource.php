@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources;
 
+use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
+use AlperenErsoy\FilamentExport\Actions\FilamentExportHeaderAction;
 use App\Filament\Resources\EventsResource\Pages;
 use App\Filament\Resources\EventsResource\RelationManagers;
 use App\Models\Events;
@@ -17,7 +19,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\RichEditor;
 use Filament\Tables\Columns\TextColumn;
-
+use Str;
 class EventsResource extends Resource
 {
     protected static ?string $model = Events::class;
@@ -90,6 +92,13 @@ class EventsResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
+                FilamentExportBulkAction::make('export')
+                    ->defaultFormat('csv')
+                    ->fileName(Str::of(config('app.name', 'TrailTracker'))->slug('_locations_') . '_' . date('d_m_Y_H_i_s'))
+            ])->headerActions([
+                FilamentExportHeaderAction::make('export')
+                    ->defaultFormat('csv')
+                    ->fileName(Str::of(config('app.name', 'TrailTracker'))->slug('_locations_') . '_' . date('d_m_Y_H_i_s'))
             ]);
     }
 

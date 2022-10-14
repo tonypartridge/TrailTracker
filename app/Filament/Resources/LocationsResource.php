@@ -2,19 +2,19 @@
 
 namespace App\Filament\Resources;
 
+use Str;
+use Filament\Tables;
+use App\Models\Locations;
+use Filament\Resources\Form;
+use Filament\Resources\Table;
+use Filament\Resources\Resource;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\RichEditor;
 use App\Filament\Resources\LocationsResource\Pages;
 use App\Filament\Resources\LocationsResource\RelationManagers;
-use App\Models\Locations;
-use Filament\Forms;
-use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
-use Filament\Resources\Resource;
-use Filament\Resources\Table;
-use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Forms\Components\RichEditor;
+use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
+use AlperenErsoy\FilamentExport\Actions\FilamentExportHeaderAction;
 
 class LocationsResource extends Resource
 {
@@ -59,6 +59,13 @@ class LocationsResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
+                FilamentExportBulkAction::make('export')
+                    ->defaultFormat('csv')
+                    ->fileName(Str::of(config('app.name', 'TrailTracker'))->slug('_locations_') . '_' . date('d_m_Y_H_i_s'))
+            ])->headerActions([
+                FilamentExportHeaderAction::make('export')
+                    ->defaultFormat('csv')
+                    ->fileName(Str::of(config('app.name', 'TrailTracker'))->slug('_locations_') . '_' . date('d_m_Y_H_i_s'))
             ]);
     }
 
@@ -68,4 +75,5 @@ class LocationsResource extends Resource
             'index' => Pages\ManageLocations::route('/'),
         ];
     }
+
 }

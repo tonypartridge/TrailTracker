@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources;
 
+use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
+use AlperenErsoy\FilamentExport\Actions\FilamentExportHeaderAction;
 use App\Filament\Resources\RecordsResource\Pages;
 use App\Filament\Resources\RecordsResource\RelationManagers;
 use App\Models\Events;
@@ -18,6 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\BaseFilter;
 use Filament\Tables\Filters\SelectFilter;
+use Str;
 
 class RecordsResource extends Resource
 {
@@ -76,6 +79,13 @@ class RecordsResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
+                FilamentExportBulkAction::make('export')
+                    ->defaultFormat('csv')
+                    ->fileName(Str::of(config('app.name', 'TrailTracker'))->slug('_locations_') . '_' . date('d_m_Y_H_i_s'))
+            ])->headerActions([
+                FilamentExportHeaderAction::make('export')
+                    ->defaultFormat('csv')
+                    ->fileName(Str::of(config('app.name', 'TrailTracker'))->slug('_locations_') . '_' . date('d_m_Y_H_i_s'))
             ]);
     }
 

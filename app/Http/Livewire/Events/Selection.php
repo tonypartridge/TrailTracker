@@ -31,6 +31,7 @@ class Selection extends Component
 
         // TODO - Rework this to a multi-rational query - head hurts atm
         $this->activeEvents = Events::where('endDateTime', '>', date('Y-m-d 23:59:59'))->get();
+        $teams          = [];
 
         if($this->event) {
             $teamIds       = Teams::where('event_id', '=', $this->event)->pluck('id');
@@ -40,7 +41,23 @@ class Selection extends Component
                                     ->get();
 
             foreach($this->teams as $it => $team) {
-                $this->teams[$it]['records'] = Records::select([
+
+                $records    = Records::select([
+                                            'records.event_id',
+                                            'records.team_id',
+                                            'records.location_id',
+                                            'records.points',
+                                            'locations.lat',
+                                            'locations.lon',
+                                            'locations.created_at',
+                                        ])
+                                            ->where('team_id', '=', $team->id)
+                                            ->leftJoin('locations', 'records.location_id', '=', 'locations.id')
+                                            ->get();
+
+                $points = $records->sum('points');
+
+                $teams[$points][$it]['records'] = Records::select([
                                                             'records.event_id',
                                                             'records.team_id',
                                                             'records.location_id',
@@ -53,12 +70,13 @@ class Selection extends Component
                                                         ->leftJoin('locations', 'records.location_id', '=', 'locations.id')
                                                         ->get();
 
-                $this->teams[$it]['points'] = $this->teams[$it]['records']->sum('points');
+                $teams[$points][$it]['points'] = $points;
+                sort($teams);
             }
         }
 
         return view('livewire.events.selection', [
-
+            'pointsTeams' => $teams
         ]);
     }
 

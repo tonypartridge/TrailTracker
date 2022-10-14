@@ -17,7 +17,8 @@
         @if($event && is_countable($teams) && count($teams) > 0)
             <h2 class="text-white my-4 text-lg font-bold">Current Rankings</h2>
             @php $c = 1 @endphp
-            @foreach($teams as $i => $team)
+            @foreach($teams as $teamPoints)
+            @foreach($teamPoints as $i => $team)
                 @if(is_countable($team->records))
                 <div class="flex border-b-2 border-gray-400" data-name="{{ $team->name }}" data-lat="{{ $team->records[0]->lat }}"
                      data-lon="{{ $team->records[0]->lat }}" data-datetime="{{ $team->records[0]->created_at }}">
@@ -30,6 +31,7 @@
                 @endif
 
                 @php ++$c @endphp
+            @endforeach
             @endforeach
         @endif
     </div>

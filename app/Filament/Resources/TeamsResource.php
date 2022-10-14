@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources;
 
+use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
+use AlperenErsoy\FilamentExport\Actions\FilamentExportHeaderAction;
 use App\Filament\Resources\TeamsResource\Pages;
 use App\Filament\Resources\TeamsResource\RelationManagers;
 use App\Models\Participants;
@@ -16,6 +18,7 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Str;
 
 class TeamsResource extends Resource
 {
@@ -78,6 +81,13 @@ class TeamsResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
+                FilamentExportBulkAction::make('export')
+                    ->defaultFormat('csv')
+                    ->fileName(Str::of(config('app.name', 'TrailTracker'))->slug('_locations_') . '_' . date('d_m_Y_H_i_s'))
+            ])->headerActions([
+                FilamentExportHeaderAction::make('export')
+                    ->defaultFormat('csv')
+                    ->fileName(Str::of(config('app.name', 'TrailTracker'))->slug('_locations_') . '_' . date('d_m_Y_H_i_s'))
             ]);
     }
 
