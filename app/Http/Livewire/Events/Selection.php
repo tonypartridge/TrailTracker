@@ -68,15 +68,20 @@ class Selection extends Component
                                                         ])
                                                         ->where('team_id', '=', $team->id)
                                                         ->leftJoin('locations', 'records.location_id', '=', 'locations.id')
-                                                        ->get();
+                                                        ->limit(1)
+                                                        ->get()->toArray();
 
-                $teams[$points][$it]['points'] = $points;
-                sort($teams);
+                $teams[$points][$it]['points']  = $points;
+                $teams[$points][$it]['name']    = $team->name;
+                $teams[$points][$it]['id']      = $team->id;
+                ksort($teams);
+
             }
         }
 
+        $this->dispatchBrowserEvent('updateMarkers');
         return view('livewire.events.selection', [
-            'pointsTeams' => $teams
+            'rankings' => $teams
         ]);
     }
 

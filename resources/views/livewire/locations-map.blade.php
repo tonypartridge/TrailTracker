@@ -10,25 +10,41 @@
             crossorigin=""></script>
 
     <script>
-        let map = L.map('map', {
+        const map = L.map('map', {
             zoomDelta: 0.25,
             zoomSnap: 0
         }).setView([54.211186, -4.583196], 11.25);
+
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
             maxZoom: 19,
             attribution: '© OpenStreetMap'
         }).addTo(map);
 
-        document.getElementById('map').addEventListener('change', function handleChange(event) {
-            let markerToOpen = window['marker' + event.target.value];
-            const [option] = event.target.selectedOptions;
-            var latlng = [option.dataset.lat, option.dataset.lon];
 
-            map.setZoomAround(latlng, 10);
-            map.panTo(latlng);
-            markerToOpen.openPopup();
-            console.log(event.target.value);
-        });
+        window.addEventListener('updateMarkers', event => {
+
+            let teams = document.querySelectorAll("#rankings > div");
+
+            if(teams) {
+                map.eachLayer(function (layer) {
+                    map.removeLayer(layer);
+                });
+
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap'
+                }).addTo(map);
+
+                window.layerGroup = L.layerGroup().addTo(map);
+
+                teams.forEach((teamItem) => {
+                    var markerName = 'marker_' + teamItem.dataset.id;
+                    var markerName = L.marker([teamItem.dataset.lat, teamItem.dataset.lon]).addTo(layerGroup);
+                    markerName.bindPopup("<p><b>" + teamItem.dataset.name + "</b></p>", {maxWidth: 400});
+                });
+
+            }
+
+        })
     </script>
-
 </div>

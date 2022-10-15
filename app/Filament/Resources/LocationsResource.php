@@ -11,6 +11,7 @@ use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\RichEditor;
+use Humaidem\FilamentMapPicker\Fields\OSMMap;
 use App\Filament\Resources\LocationsResource\Pages;
 use App\Filament\Resources\LocationsResource\RelationManagers;
 use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
@@ -30,7 +31,40 @@ class LocationsResource extends Resource
                 TextInput::make('address'),
                 TextInput::make('lat'),
                 TextInput::make('lon'),
-                RichEditor::make('description')->columnSpan(2)
+                RichEditor::make('description')->columnSpan(2),
+                OSMMap::make('location')
+                    ->columnSpan(2)
+                    ->label('Pick Location')
+                    ->showMarker()
+                    ->draggable()
+                    ->extraControl([
+                        'zoomControl'           => true,
+                        'zoom'                  => 12,
+                        'zoomSnap'              => 0.25,
+                        'wheelPxPerZoomLevel'   => 1,
+                    ])
+                    // tiles url (refer to https://www.spatialbias.com/2018/02/qgis-3.0-xyz-tile-layers/)
+                    ->tilesUrl('https://tile.openstreetmap.org/{z}/{x}/{y}.png')
+                    ->afterStateHydrated(function ($state, callable $set, $get) {
+
+                        $latLng = json_decode($state);
+                        if ($latLng) {
+                            /** @var Point $state */
+                            $set('location', ['lat' => $latLng->lat, 'lng' => $latLng->lng]);
+                            $set('lat', $latLng->lat);
+                            $set('lon', $latLng->lng);
+                        } else {
+                            // Fetch from lat/lng
+                            $set('location', ['lat' => $get('lat'), 'lng' => $get('lon')]);
+                        }
+                    })
+                    ->afterStateUpdated(function ($state, callable $set) {
+                        if ($state) {
+                            /** @var Point $state */
+                            $set('lat', $state['lat']);
+                            $set('lon', $state['lng']);
+                        }
+                    })
 
             ]);
     }
