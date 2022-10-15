@@ -11,9 +11,9 @@
 
     <script>
         const map = L.map('map', {
-            zoomDelta: 0.25,
+            zoomDelta: 0.50,
             zoomSnap: 0
-        }).setView([54.211186, -4.583196], 11.25);
+        }).setView([54.211186, -4.583196], 11.50);
 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
             maxZoom: 19,
@@ -24,7 +24,7 @@
         window.addEventListener('updateMarkers', event => {
 
             let teams = document.querySelectorAll("#rankings > div");
-
+            let markerIds   = [];
             if(teams) {
                 map.eachLayer(function (layer) {
                     map.removeLayer(layer);
@@ -38,13 +38,25 @@
                 window.layerGroup = L.layerGroup().addTo(map);
 
                 teams.forEach((teamItem) => {
-                    var markerName = 'marker_' + teamItem.dataset.id;
+                    var markerName = 'marker_' + teamItem.dataset.tid;
+                    markerIds.push(markerName);
                     var markerName = L.marker([teamItem.dataset.lat, teamItem.dataset.lon]).addTo(layerGroup);
-                    markerName.bindPopup("<p><b>" + teamItem.dataset.name + "</b></p>", {maxWidth: 400});
+                    markerName.bindPopup("<p><b>" + teamItem.dataset.name + "</b></p><p>Received at: " + teamItem.dataset.datetime, {maxWidth: 400});
                 });
 
             }
+            console.log(markerIds)
 
-        })
+        });
+
+        function clearMarker(id) {
+            console.log(markers)
+            var new_markers = []
+            markers.forEach(function(marker) {
+                if (marker._id == id) map.removeLayer(marker)
+                else new_markers.push(marker)
+            })
+            markers = new_markers
+        }
     </script>
 </div>
