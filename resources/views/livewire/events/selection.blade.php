@@ -1,6 +1,6 @@
 <div>
     <!-- Event Select -->
-    <div class="w-96 text-white p-6" wire:poll.200000ms>
+    <div class="w-96 text-white p-6" wire:poll.10000ms>
         @if(count($activeEvents) > 0)
         <form>
             <select id="event" wire:model="event" class="w-full bg-transparent" data-selected_event_id="{{ $event }}" wire:change="selectEvent">
