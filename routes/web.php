@@ -18,3 +18,4 @@ Route::get('/', function () {
 });
 
 Route::get('/record/add/{loc_id}', \App\Http\Livewire\Record\Create::class);
+Route::get('/qr-record/{loc_id}', \App\Http\Livewire\Record\Create::class);

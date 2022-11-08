@@ -32,41 +32,41 @@ class LocationsResource extends Resource
                 TextInput::make('lat'),
                 TextInput::make('lon'),
                 RichEditor::make('description')->columnSpan(2),
-                OSMMap::make('location')
-                    ->columnSpan(2)
-                    ->label('Pick Location')
-                    ->showMarker()
-                    ->draggable()
-                    ->extraControl([
-                        'zoomControl'           => true,
-                        'zoom'                  => 12,
-                        'maxZoom'               => 17,
-                        'zoomSnap'              => 0.50,
-                        'wheelPxPerZoomLevel'   => 1,
-                    ])
-                    // tiles url (refer to https://www.spatialbias.com/2018/02/qgis-3.0-xyz-tile-layers/)
-                    ->tilesUrl('https://tile.opentopomap.org/{z}/{x}/{y}.png')
-                    ->afterStateHydrated(function ($state, callable $set, $get) {
-
-                        $latLng = !is_array($state) ? json_decode($state) : (object) $state;
-
-                        if ($latLng) {
-                            /** @var Point $state */
-                            $set('location', ['lat' => $latLng->lat, 'lng' => $latLng->lng]);
-                            $set('lat', $latLng->lat);
-                            $set('lon', $latLng->lng);
-                        } else {
-                            // Fetch from lat/lng
-                            $set('location', ['lat' => $get('lat'), 'lng' => $get('lon')]);
-                        }
-                    })
-                    ->afterStateUpdated(function ($state, callable $set) {
-                        if ($state) {
-                            /** @var Point $state */
-                            $set('lat', $state['lat']);
-                            $set('lon', $state['lng']);
-                        }
-                    })
+//                OSMMap::make('location')
+//                    ->columnSpan(2)
+//                    ->label('Pick Location')
+//                    ->showMarker()
+//                    ->draggable()
+//                    ->extraControl([
+//                        'zoomControl'           => true,
+//                        'zoom'                  => 12,
+//                        'maxZoom'               => 17,
+//                        'zoomSnap'              => 0.50,
+//                        'wheelPxPerZoomLevel'   => 1,
+//                    ])
+//                    // tiles url (refer to https://www.spatialbias.com/2018/02/qgis-3.0-xyz-tile-layers/)
+//                    ->tilesUrl('https://tile.opentopomap.org/{z}/{x}/{y}.png')
+//                    ->afterStateHydrated(function ($state, callable $set, $get) {
+//
+//                        $latLng = !is_array($state) ? json_decode($state) : (object) $state;
+//
+//                        if ($latLng) {
+//                            /** @var Point $state */
+//                            $set('location', ['lat' => $latLng->lat, 'lng' => $latLng->lng]);
+//                            $set('lat', $latLng->lat);
+//                            $set('lon', $latLng->lng);
+//                        } else {
+//                            // Fetch from lat/lng
+//                            $set('location', ['lat' => $get('lat'), 'lng' => $get('lon')]);
+//                        }
+//                    })
+//                    ->afterStateUpdated(function ($state, callable $set) {
+//                        if ($state) {
+//                            /** @var Point $state */
+//                            $set('lat', $state['lat']);
+//                            $set('lon', $state['lng']);
+//                        }
+//                    })
 
             ]);
     }
@@ -86,7 +86,7 @@ class LocationsResource extends Resource
                 Tables\Actions\Action::make('qrcode')
                     ->action(fn () => '')
                     ->modalContent(
-                        fn ($record) => view('test', ['record' => $record])
+                        fn ($record) => view('filament.components.qrcode', ['record' => $record])
                     )
                     ->modalHeading('Location QR Code')
                     ->modalButton('Close', ''),

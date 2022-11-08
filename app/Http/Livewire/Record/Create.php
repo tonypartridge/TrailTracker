@@ -8,6 +8,7 @@ use App\Models\Locations;
 use App\Models\Records;
 use App\Models\Teams;
 use Livewire\Component;
+use Hashids\Hashids;
 
 class Create extends Component
 {
@@ -31,6 +32,12 @@ class Create extends Component
 
     public function mount($loc_id)
     {
+
+        if(strlen($loc_id) > 4) {
+
+            $hasher = new Hashids();
+            $loc_id = $hasher->decodeHex($loc_id) - 1000000000;
+        }
         $this->loc_id = $loc_id;
     }
 
