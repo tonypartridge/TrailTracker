@@ -40,14 +40,16 @@ class LocationsResource extends Resource
                     ->extraControl([
                         'zoomControl'           => true,
                         'zoom'                  => 12,
-                        'zoomSnap'              => 0.25,
+                        'maxZoom'               => 17,
+                        'zoomSnap'              => 0.50,
                         'wheelPxPerZoomLevel'   => 1,
                     ])
                     // tiles url (refer to https://www.spatialbias.com/2018/02/qgis-3.0-xyz-tile-layers/)
-                    ->tilesUrl('https://tile.openstreetmap.org/{z}/{x}/{y}.png')
+                    ->tilesUrl('https://tile.opentopomap.org/{z}/{x}/{y}.png')
                     ->afterStateHydrated(function ($state, callable $set, $get) {
 
-                        $latLng = json_decode($state);
+                        $latLng = !is_array($state) ? json_decode($state) : (object) $state;
+
                         if ($latLng) {
                             /** @var Point $state */
                             $set('location', ['lat' => $latLng->lat, 'lng' => $latLng->lng]);

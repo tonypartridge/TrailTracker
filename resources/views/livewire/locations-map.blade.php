@@ -15,38 +15,70 @@
             zoomSnap: 0
         }).setView([54.211186, -4.583196], 11.50);
 
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-            maxZoom: 19,
+        // L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        L.tileLayer('https://tile.opentopomap.org/{z}/{x}/{y}.png', {
+            maxZoom: 17,
             attribution: '© OpenStreetMap'
         }).addTo(map);
 
 
         window.addEventListener('updateMarkers', event => {
 
-            let teams = document.querySelectorAll("#rankings > div");
-            let markerIds   = [];
-            if(teams) {
-                map.eachLayer(function (layer) {
-                    map.removeLayer(layer);
-                });
+            map.eachLayer(function (layer) {
+                map.removeLayer(layer);
+            });
 
-                L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-                    maxZoom: 19,
-                    attribution: '© OpenStreetMap'
-                }).addTo(map);
+            L.tileLayer('https://tile.opentopomap.org/{z}/{x}/{y}.png', {
+                maxZoom: 17,
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+
+            // We selected a team, so we will update the markers
+
+            let checkPoints = document.querySelectorAll("#checkPoints > div");
+            let checkPointIds   = [];
+            if(checkPoints) {
 
                 window.layerGroup = L.layerGroup().addTo(map);
 
+                const svgIcon = L.divIcon({
+                    html: `<x-ri-flag-line class="w-10 h-10 text-red-500 fill-current bg-white rounded-full p-1 border-2 border-red-500"/>`,
+                    className: "",
+                    iconSize: [8, 8],
+                    iconAnchor: [17, 6],
+                });
+
+                checkPoints.forEach((cp) => {
+                    var markerName = 'marker_' + cp.dataset.tid;
+                    checkPointIds.push(markerName);
+                    var markerName = L.marker([cp.dataset.lat, cp.dataset.lon], { clickable: true, draggable: false, icon: svgIcon} ).addTo(layerGroup);
+                    markerName.bindPopup("<p><b>" + cp.dataset.name + "</b></p>", {maxWidth: 400});
+                });
+
+            }
+
+
+            let teams = document.querySelectorAll("#rankings > div");
+            let markerIds   = [];
+            if(teams) {
+
+                window.layerGroup = L.layerGroup().addTo(map);
+
+                const svgIcon = L.divIcon({
+                    html: `<x-tabler-bike class="w-8 h-8 text-green-700 fill-current bg-white rounded-full p-1 border-2 border-green-700"/>`,
+                    className: "",
+                    iconSize: [8, 8],
+                    iconAnchor: [20, -30],
+                });
+
                 teams.forEach((teamItem) => {
                     var markerName = 'marker_' + teamItem.dataset.tid;
-                    markerIds.push(markerName);
-                    var markerName = L.marker([teamItem.dataset.lat, teamItem.dataset.lon]).addTo(layerGroup);
-                    markerName.bindPopup("<p><b>" + teamItem.dataset.name + "</b></p><p>Received at: " + teamItem.dataset.datetime, {maxWidth: 400});
+                    window[markerName] = L.marker([teamItem.dataset.lat, teamItem.dataset.lon], { clickable: true, draggable: false, icon: svgIcon}).addTo(layerGroup);
+                    window[markerName].bindPopup("<p><b>" + teamItem.dataset.name + "</b></p><p>Received at: " + teamItem.dataset.datetime, {maxWidth: 400});
                 });
 
             }
             console.log(markerIds)
-
         });
 
         function clearMarker(id) {
@@ -58,5 +90,12 @@
             })
             markers = new_markers
         }
+
+        function goToTeam(id, lat, lon) {
+            console.log(id);
+            map.flyTo([lat, lon], 16);
+            window['marker_' + id].openPopup();
+        }
+
     </script>
 </div>

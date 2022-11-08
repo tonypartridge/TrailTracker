@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Events;
 
 use App\Models\Events;
+use App\Models\EventsLocations;
 use App\Models\Records;
 use App\Models\Teams;
 use Livewire\Component;
@@ -22,6 +23,8 @@ class Selection extends Component
 
     public $teams;
 
+    public $checkPoints = [];
+
     public function mount() {
         $this->eventId  = session()->get('eventId', '');
     }
@@ -34,8 +37,14 @@ class Selection extends Component
         $teams          = [];
 
         if($this->event) {
-            $teamIds       = Teams::where('event_id', '=', $this->event)->pluck('id');
-            $this->teams   = Teams::select(['teams.*'])
+
+            $this->checkPoints  = EventsLocations::select('event_id', 'location_id', 'locations.name', 'locations.lat', 'locations.lon')
+                                                ->where('event_id', '=', $this->event)
+                                                ->leftJoin('locations', 'location_id', '=', 'locations.id')
+                                                ->get();
+
+            $teamIds        = Teams::where('event_id', '=', $this->event)->pluck('id');
+            $this->teams    = Teams::select(['teams.*'])
                                     ->where('event_id', '=', $this->event)
                                     ->groupBy('teams.id')
                                     ->get();
@@ -74,6 +83,7 @@ class Selection extends Component
                 $teams[$points][$it]['points']  = $points;
                 $teams[$points][$it]['name']    = $team->name;
                 $teams[$points][$it]['id']      = $team->id;
+
                 ksort($teams);
 
             }
